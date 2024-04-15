@@ -1,13 +1,12 @@
 "use client";
 
 import CustomBreadcrumbs from "@/components/custom-breadcrumbs";
-import { useSettingsContext } from "@/components/settings/context";
+import { useSettingsContext } from "@/components/settings";
 import { paths } from "@/routes/paths";
 import AddCategoryForm from "@/sections/dashboard/categories/add-category-form";
-import CategoriesList from "@/sections/dashboard/categories/categories-list";
 import { Container } from "@mui/material";
 
-export default function CategoriesView() {
+export default function AddCategoryView() {
   const settings: any = useSettingsContext();
 
   return (
@@ -20,7 +19,7 @@ export default function CategoriesView() {
             href: paths.dashboard.root,
           },
           {
-            name: "Categories",
+            name: "Add Category",
           },
         ]}
         sx={{
@@ -28,7 +27,7 @@ export default function CategoriesView() {
         }}
       />
 
-      <CategoriesList />
+      <AddCategoryForm />
     </Container>
   );
 }

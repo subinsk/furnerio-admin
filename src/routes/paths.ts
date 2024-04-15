@@ -12,7 +12,7 @@ export const paths = {
     root: ROOTS.DASHBOARD,
     categories: {
       root: `${ROOTS.DASHBOARD}/categories`,
-      new: `${ROOTS.DASHBOARD}/category/new`,
+      new: `${ROOTS.DASHBOARD}/add-category`,
     },
     products: {
       root: `${ROOTS.DASHBOARD}/products`,
