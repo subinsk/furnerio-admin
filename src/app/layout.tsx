@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import "./globals.css";
-import ThemeProvider from "@/theme";
+import RootLayout from "@/layouts/root-layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
   description: "Admin panel for Furnerio",
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -19,9 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AppRouterCacheProvider>
-          <ThemeProvider>{children} </ThemeProvider>
-        </AppRouterCacheProvider>
+        <RootLayout>{children}</RootLayout>
       </body>
     </html>
   );

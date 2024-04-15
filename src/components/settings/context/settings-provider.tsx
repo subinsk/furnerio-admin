@@ -1,3 +1,5 @@
+"use client";
+
 import PropTypes from "prop-types";
 import isEqual from "lodash/isEqual";
 import { useEffect, useMemo, useCallback, useState } from "react";
