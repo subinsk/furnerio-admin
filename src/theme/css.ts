@@ -73,9 +73,9 @@ export const menuItem = (theme: any): any => ({
 // ----------------------------------------------------------------------
 
 export function bgBlur(props: {
-  color: any;
-  blur: any;
-  opacity: any;
+  color?: any;
+  blur?: any;
+  opacity?: any;
   imgUrl?: any;
 }) {
   const color = props?.color || "#000000";
