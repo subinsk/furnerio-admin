@@ -20,11 +20,11 @@ export default function UploadAvatar({
   sx,
   ...other
 }: {
-  error: any;
-  file: any;
-  disabled: any;
-  helperText: string;
-  sx: any;
+  error?: any;
+  file?: any;
+  disabled?: any;
+  helperText?: string;
+  sx?: any;
   [key: string]: any;
 }) {
   const {

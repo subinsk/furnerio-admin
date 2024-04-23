@@ -22,6 +22,7 @@ export default function Page() {
       href: paths.dashboard.orders.root,
     },
   ];
+
   return (
     <Stack direction="row" spacing="24px" sx={{ mt: 3, p: 3 }} flexWrap="wrap">
       {items.map((item, index) => (

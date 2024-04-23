@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import { useFormContext, Controller } from 'react-hook-form';
+import PropTypes from "prop-types";
+import { useFormContext, Controller } from "react-hook-form";
 // @mui
-import FormHelperText from '@mui/material/FormHelperText';
+import FormHelperText from "@mui/material/FormHelperText";
 //
-import { UploadAvatar, Upload, UploadBox } from '../upload';
+import { UploadAvatar, Upload, UploadBox } from "../upload";
 
 // ----------------------------------------------------------------------
 
-export function RHFUploadAvatar({ name, ...other }) {
+export function RHFUploadAvatar({ name, ...other }: { name: string }) {
   const { control } = useFormContext();
 
   return (
@@ -19,7 +19,7 @@ export function RHFUploadAvatar({ name, ...other }) {
           <UploadAvatar error={!!error} file={field.value} {...other} />
 
           {!!error && (
-            <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
+            <FormHelperText error sx={{ px: 2, textAlign: "center" }}>
               {error.message}
             </FormHelperText>
           )}
@@ -35,7 +35,7 @@ RHFUploadAvatar.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export function RHFUploadBox({ name, ...other }) {
+export function RHFUploadBox({ name, ...other }: { name: string }) {
   const { control } = useFormContext();
 
   return (
@@ -55,7 +55,17 @@ RHFUploadBox.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export function RHFUpload({ name, multiple, helperText, ...other }) {
+export function RHFUpload({
+  name,
+  multiple,
+  helperText,
+  ...other
+}: {
+  name: string;
+  multiple: boolean;
+  helperText?: string;
+  [key: string]: any;
+}) {
   const { control } = useFormContext();
 
   return (
@@ -66,7 +76,7 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
         multiple ? (
           <Upload
             multiple
-            accept={{ 'image/*': [] }}
+            accept={{ "image/*": [] }}
             files={field.value}
             error={!!error}
             helperText={
@@ -80,7 +90,7 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
           />
         ) : (
           <Upload
-            accept={{ 'image/*': [] }}
+            accept={{ "image/*": [] }}
             file={field.value}
             error={!!error}
             helperText={

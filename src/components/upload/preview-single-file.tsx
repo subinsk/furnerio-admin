@@ -20,6 +20,7 @@ export default function SingleFilePreview({ imgUrl = "" }) {
       <Image
         alt="file preview"
         src={imgUrl}
+        objectFit="contain"
         sx={{
           width: 1,
           height: 1,

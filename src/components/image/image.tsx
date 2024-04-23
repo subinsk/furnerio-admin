@@ -27,6 +27,7 @@ interface ImageProps {
   visibleByDefault?: boolean;
   wrapperClassName?: string;
   useIntersectionObserver?: boolean;
+  objectFit?: string;
   sx?: object;
 }
 
@@ -51,6 +52,7 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
       visibleByDefault,
       wrapperClassName,
       useIntersectionObserver,
+      objectFit,
       sx,
       ...other
     },
@@ -96,7 +98,7 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
         sx={{
           width: 1,
           height: 1,
-          objectFit: "cover",
+          objectFit: objectFit || "cover",
           verticalAlign: "bottom",
           ...(!!ratio && {
             top: 0,

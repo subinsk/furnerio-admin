@@ -34,18 +34,18 @@ export default function Upload({
   sx,
   ...other
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   multiple?: boolean;
   error: any;
   helperText: any;
-  file: any;
-  onDelete: any;
-  files: any;
-  thumbnail: any;
-  onUpload: any;
-  onRemove: any;
-  onRemoveAll: any;
-  sx: any;
+  file?: any;
+  onDelete?: any;
+  files?: any;
+  thumbnail?: any;
+  onUpload?: any;
+  onRemove?: any;
+  onRemoveAll?: any;
+  sx?: any;
   [key: string]: any;
 }) {
   const {

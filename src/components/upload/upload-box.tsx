@@ -14,10 +14,10 @@ export default function UploadBox({
   sx,
   ...other
 }: {
-  placeholder: any;
-  error: boolean;
-  disabled: any;
-  sx: any;
+  placeholder?: any;
+  error?: boolean;
+  disabled?: any;
+  sx?: any;
   [key: string]: any;
 }) {
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
