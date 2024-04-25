@@ -19,6 +19,7 @@ export async function POST(request: Request) {
       data: {
         name: res.name,
         description: res.description,
+        image: res.image,
         slug: slugify(res.name),
       },
     });
