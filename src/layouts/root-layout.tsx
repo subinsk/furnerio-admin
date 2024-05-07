@@ -31,6 +31,9 @@ import { LocalizationProvider } from "@/locales";
 import ThemeProvider from "@/theme";
 import ProgressBar from "@/components/progress-bar/progress-bar";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { IKContext } from "imagekitio-react";
+import { IMAGE_KIT_PUBLIC_KEY, IMAGE_KIT_URL_ENDPOINT } from "@/config";
+import { imageKitAuthenticator } from "@/lib";
 
 export default function RootLayout({
   children,
@@ -41,7 +44,7 @@ export default function RootLayout({
     <LocalizationProvider>
       <SettingsProvider
         defaultSettings={{
-          themeMode: "dark", // 'light' | 'dark'
+          themeMode: "light", // 'light' | 'dark'
           themeDirection: "ltr", //  'rtl' | 'ltr'
           themeContrast: "default", // 'default' | 'bold'
           themeLayout: "vertical", // 'vertical' | 'horizontal' | 'mini'
@@ -53,9 +56,15 @@ export default function RootLayout({
           <ThemeProvider>
             <MotionLazy>
               <SnackbarProvider>
-                <SettingsDrawer />
-                <ProgressBar />
-                {children}
+                <IKContext
+                  urlEndpoint={IMAGE_KIT_URL_ENDPOINT}
+                  publicKey={IMAGE_KIT_PUBLIC_KEY}
+                  authenticator={imageKitAuthenticator}
+                >
+                  <SettingsDrawer />
+                  <ProgressBar />
+                  {children}
+                </IKContext>
               </SnackbarProvider>
             </MotionLazy>
           </ThemeProvider>

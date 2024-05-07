@@ -17,7 +17,7 @@ export default function BreadcrumbsLink({
     icon: any;
     name: string;
   };
-  activeLast: boolean;
+  activeLast?: boolean;
   disabled: boolean;
 }) {
   const { name, href, icon } = link;

@@ -66,13 +66,21 @@ export default function LoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      //   await login?.(data.email, data.password);
+      const response = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (response?.error !== null) {
+        throw new Error(response?.error);
+      }
 
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
-      //   setErrorMsg(typeof error === "string" ? error : error.message);
+      setErrorMsg("Invalid Credentials");
     }
   });
 
@@ -102,15 +110,7 @@ export default function LoginView() {
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
-      <Typography variant="h4">Sign in to Minimal</Typography>
-
-      <Stack direction="row" spacing={0.5}>
-        <Typography variant="body2">New user?</Typography>
-
-        <Link component={RouterLink} href={""} variant="subtitle2">
-          Create an account
-        </Link>
-      </Stack>
+      <Typography variant="h4">Sign in to Furnerio</Typography>
     </Stack>
   );
 
@@ -185,10 +185,6 @@ export default function LoginView() {
 
         <IconButton color="inherit" onClick={handleGithubLogin}>
           <Iconify icon="eva:github-fill" />
-        </IconButton>
-
-        <IconButton onClick={handleTwitterLogin}>
-          <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
         </IconButton>
       </Stack>
     </div>

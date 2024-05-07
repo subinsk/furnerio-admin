@@ -29,6 +29,8 @@ interface ImageProps {
   useIntersectionObserver?: boolean;
   objectFit?: string;
   sx?: object;
+  ref?: any;
+  [x: string]: any;
 }
 
 const Image = forwardRef<HTMLSpanElement, ImageProps>(

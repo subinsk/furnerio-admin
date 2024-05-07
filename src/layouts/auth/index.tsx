@@ -41,10 +41,10 @@ export default function AuthLayout({
     <Stack
       sx={{
         width: 1,
-        mx: "auto",
+        m: "auto",
         maxWidth: 480,
         px: { xs: 2, md: 8 },
-        py: { xs: 15, md: 30 },
+        py: { xs: 4, md: 12 },
       }}
     >
       {children}
@@ -75,7 +75,7 @@ export default function AuthLayout({
         component="img"
         alt="auth"
         src={image || "/assets/illustrations/illustration_dashboard.png"}
-        sx={{ maxWidth: 720 }}
+        sx={{ maxWidth: 500 }}
       />
     </Stack>
   );

@@ -21,5 +21,8 @@ export const paths = {
     orders: {
       root: `${ROOTS.DASHBOARD}/orders`,
     },
+    bannerImages: {
+      root: `${ROOTS.DASHBOARD}/banner-images`,
+    },
   },
 };

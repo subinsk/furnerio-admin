@@ -1,3 +1,5 @@
+"use client";
+
 import "@/utils/highlight";
 import ReactQuill from "react-quill";
 // @mui

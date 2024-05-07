@@ -4,12 +4,14 @@ import { Checkbox, IconButton, TableCell, TableRow } from "@mui/material";
 
 export default function CategoriesTableRow({
   row,
+  index,
   selected,
   onEditRow,
   onSelectRow,
   onDeleteRow,
 }: {
   row: any;
+  index: number;
   selected: boolean;
   onEditRow: () => void;
   onSelectRow: () => void;
@@ -18,14 +20,14 @@ export default function CategoriesTableRow({
   const { name } = row;
 
   const popover = usePopover();
+
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-      <TableCell sx={{ display: "flex", alignItems: "center" }}>
-        {name}
-      </TableCell>
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{name}</TableCell>
       <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
         <IconButton
           color={popover.open ? "inherit" : "default"}

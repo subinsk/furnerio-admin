@@ -5,7 +5,14 @@ export function checkbox(theme: any) {
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          padding: theme.spacing(1),
+          padding: "0px 6px 0px 0px",
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
+          "& .MuiSvgIcon-root": {
+            width: "16px",
+            height: "16px",
+          },
         },
       },
     },

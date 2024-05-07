@@ -4,24 +4,9 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { z } from "zod";
-import { compare } from "bcryptjs";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib";
-import { User } from "@/types";
-
-async function getUser(email: string): Promise<User | null> {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    return user;
-  } catch (error) {
-    throw new Error("Failed to fetch user.");
-  }
-}
+import { API_URL } from "./config";
 
 export const authConfig = {
   secret: process.env.AUTH_SECRET,
@@ -52,13 +37,22 @@ export const authConfig = {
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
-          if (!user) return null;
-          const passwordsMatch = user.password
-            ? await compare(password, user.password)
-            : false;
 
-          if (passwordsMatch) return user;
+          const response = await fetch(`${API_URL}/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          }).then((res) => res.json());
+
+          console.log(response);
+
+          return {
+            id: response.id,
+            email: response.email,
+            name: response.name,
+          };
         }
 
         return null;

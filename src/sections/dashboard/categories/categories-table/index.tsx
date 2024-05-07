@@ -24,7 +24,8 @@ import CategoriesTableRow from "./categories-table-row";
 import { useRouter } from "next/navigation";
 
 const TABLE_HEAD = [
-  { id: "name", label: "Name", width: 120 },
+  { id: "sno", label: "S.No.", width: 40 },
+  { id: "name", label: "Name", width: 80 },
   { id: "", width: 20 },
 ];
 
@@ -66,7 +67,9 @@ function applyFilter({
 export default function CategoriesTable() {
   // hooks
   const router = useRouter();
-  const table = useTable();
+  const table = useTable({
+    defaultDense: true,
+  });
 
   const {
     categories,
@@ -151,7 +154,7 @@ export default function CategoriesTable() {
   }, [categories, categoriesLoading]);
 
   return (
-    <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+    <TableContainer sx={{ position: "relative" }}>
       <TableSelectedAction
         dense={table.dense}
         numSelected={table.selected.length}
@@ -171,7 +174,7 @@ export default function CategoriesTable() {
         }
       />
       <Scrollbar>
-        <Table size={table.dense ? "small" : "medium"} sx={{ minWidth: 960 }}>
+        <Table size={table.dense ? "small" : "medium"}>
           <TableHeadCustom
             order={table.order}
             orderBy={table.orderBy}
@@ -192,10 +195,11 @@ export default function CategoriesTable() {
                 table.page * table.rowsPerPage,
                 table.page * table.rowsPerPage + table.rowsPerPage
               )
-              .map((row: any) => (
+              .map((row: any, index: number) => (
                 <CategoriesTableRow
                   key={row.id}
                   row={row}
+                  index={index}
                   selected={table.selected.includes(row.id)}
                   onSelectRow={() => table.onSelectRow(row.id)}
                   onDeleteRow={() => handleDeleteRow(row.id)}

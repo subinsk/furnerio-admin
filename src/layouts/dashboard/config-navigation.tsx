@@ -78,6 +78,11 @@ export function useNavData() {
             path: paths.dashboard.orders.root,
             icon: ICONS.order,
           },
+          {
+            title: "Banner Images",
+            path: paths.dashboard.bannerImages.root,
+            icon: ICONS.kanban,
+          },
         ],
       },
     ],
