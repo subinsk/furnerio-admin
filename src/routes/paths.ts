@@ -16,7 +16,7 @@ export const paths = {
     },
     products: {
       root: `${ROOTS.DASHBOARD}/products`,
-      new: `${ROOTS.DASHBOARD}/product/new`,
+      new: `${ROOTS.DASHBOARD}/add-product`,
     },
     orders: {
       root: `${ROOTS.DASHBOARD}/orders`,

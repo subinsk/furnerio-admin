@@ -28,6 +28,7 @@ export function RHFSelect({
   helperText?: string;
   children: React.ReactNode;
   PaperPropsSx?: object;
+  [x: string]: any;
 }) {
   const { control } = useFormContext();
 
@@ -80,13 +81,14 @@ export function RHFMultiSelect({
   ...other
 }: {
   name: string;
-  chip: boolean;
+  chip?: boolean;
   label: string;
   options: any[]; // Replace 'any' with the appropriate type for options
   checkbox: boolean;
-  placeholder: string;
-  helperText: string; // Add type annotation for helperText
-  sx: object;
+  placeholder?: string;
+  helperText?: string; // Add type annotation for helperText
+  sx?: object;
+  [x: string]: any;
   // Add type annotations for other parameters if necessary
 }) {
   const { control } = useFormContext();

@@ -65,11 +65,11 @@ export function RHFMultiCheckbox({
 }: {
   row: boolean;
   name: string;
-  label: string;
+  label?: string;
   options: Array<{ value: string; label: string }>;
-  spacing: number;
-  helperText: string;
-  sx: any;
+  spacing?: number;
+  helperText?: string;
+  sx?: any;
   [key: string]: any;
 }) {
   const { control } = useFormContext();

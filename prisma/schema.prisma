@@ -14,76 +14,27 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Account {
-  id                 String  @id @default(uuid())
-  userId             String  @unique
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-  oauth_token_secret String?
-  oauth_token        String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(uuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+enum Role {
+  admin
+  user
 }
 
 model User {
-  id            String          @id @default(uuid())
-  email         String          @unique
+  id            String    @id @default(uuid())
+  email         String    @unique
   name          String
   phone         String?
   password      String?
-  emailVerified DateTime?
+  emailVerified String?   @map("email_verified")
   image         String?
-  role          String          @default("user")
-  accounts      Account[]
-  sessions      Session[]
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  role          Role?     @default(user)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
   cart          Cart?
   addresses     Address[]
   orders        Order[]
-}
 
-// Optional for WebAuthn support
-model Authenticator {
-  id                   String  @id @default(uuid())
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+  @@map("users")
 }
 
 model Category {
@@ -98,6 +49,8 @@ model Category {
   parent        Category?  @relation("SubCategories", fields: [parentId], references: [id])
   parentId      String?
   subCategories Category[] @relation("SubCategories")
+
+  @@map("categories")
 }
 
 model Product {
@@ -114,6 +67,8 @@ model Product {
   cart        Cart[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("products")
 }
 
 model Cart {
@@ -123,6 +78,8 @@ model Cart {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   products  Product[]
+
+  @@map("carts")
 }
 
 model Order {
@@ -132,6 +89,8 @@ model Order {
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@map("orders")
 }
 
 model Address {
@@ -145,4 +104,6 @@ model Address {
   userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("addresses")
 }

@@ -30,7 +30,21 @@ const Logo = forwardRef(
 
     // OR using local (public folder)
     // -------------------------------------------------------
-    const logo = <Image src="/next.svg" alt="logo" width={40} height={40} />;
+    const logo = (
+      <Box
+        sx={{
+          ...sx,
+        }}
+      >
+        <Image
+          src="/logo/logo-colored.png"
+          alt="logo"
+          objectFit="contain"
+          width={40}
+          height={40}
+        />
+      </Box>
+    );
 
     if (disabledLink) {
       return logo;

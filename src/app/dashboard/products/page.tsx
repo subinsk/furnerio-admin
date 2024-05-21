@@ -1,7 +1,5 @@
+import ProductsView from "@/views/dashboard/products";
+
 export default function Page() {
-  return (
-    <div>
-      <h1>Products</h1>
-    </div>
-  );
+  return <ProductsView />;
 }

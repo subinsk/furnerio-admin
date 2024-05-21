@@ -1,5 +1,5 @@
-import LoginView from "@/views/auth/login";
+import AuthView from "@/views/auth";
 
 export default function LoginPage() {
-  return <LoginView />;
+  return <AuthView type="sign_in" />;
 }

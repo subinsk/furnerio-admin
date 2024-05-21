@@ -1,6 +1,12 @@
-import { usePopover } from "@/components/custom-popover";
+import CustomPopover, { usePopover } from "@/components/custom-popover";
 import Iconify from "@/components/iconify";
-import { Checkbox, IconButton, TableCell, TableRow } from "@mui/material";
+import {
+  Checkbox,
+  IconButton,
+  MenuItem,
+  TableCell,
+  TableRow,
+} from "@mui/material";
 
 export default function CategoriesTableRow({
   row,
@@ -22,20 +28,33 @@ export default function CategoriesTableRow({
   const popover = usePopover();
 
   return (
-    <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{name}</TableCell>
-      <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
-        <IconButton
-          color={popover.open ? "inherit" : "default"}
-          onClick={popover.onOpen}
+    <>
+      <TableRow hover selected={selected}>
+        <TableCell padding="checkbox">
+          <Checkbox checked={selected} onClick={onSelectRow} />
+        </TableCell>
+        <TableCell>{index + 1}</TableCell>
+        <TableCell>{name}</TableCell>
+        <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
+          <IconButton
+            color={popover.open ? "inherit" : "default"}
+            onClick={popover.onOpen}
+          >
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      {popover.open && (
+        <CustomPopover
+          open={popover.open}
+          onClose={popover.onClose}
+          sx={{ width: 120, height: 300 }}
         >
-          <Iconify icon="eva:more-vertical-fill" />
-        </IconButton>
-      </TableCell>
-    </TableRow>
+          <MenuItem onClick={onEditRow}>
+            <Iconify icon="eva:edit-2-fill" />
+          </MenuItem>
+        </CustomPopover>
+      )}
+    </>
   );
 }

@@ -16,10 +16,10 @@ export default function CustomPopover({
   ...other
 }: {
   open: any;
-  children: any;
+  children: any;               
   arrow?: string;
   hiddenArrow?: boolean;
-  sx: any;
+  sx?: any;
   [key: string]: any;
 }) {
   const { style, anchorOrigin, transformOrigin } = getPosition(
