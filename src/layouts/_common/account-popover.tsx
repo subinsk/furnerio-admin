@@ -1,3 +1,5 @@
+"use client";
+
 import { m } from "framer-motion";
 // @mui
 import { alpha } from "@mui/material/styles";
@@ -18,6 +20,9 @@ import { useSnackbar } from "@/components/snackbar";
 import CustomPopover, { usePopover } from "@/components/custom-popover";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { createClient } from "@/lib/supabase/client";
+import { useEffect } from "react";
+import useGetUser from "@/hooks/use-get-user";
 
 // ----------------------------------------------------------------------
 
@@ -40,8 +45,7 @@ const OPTIONS = [
 
 export default function AccountPopover() {
   const router = useRouter();
-
-  const { user } = useMockedUser();
+  const supabase = createClient();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -64,6 +68,10 @@ export default function AccountPopover() {
     router.push(path);
   };
 
+  const user = useGetUser();
+
+  console.log(user);
+  useEffect(() => {}, []);
   return (
     <>
       <IconButton
