@@ -15,6 +15,7 @@ export default function CategoriesTableRow({
   onEditRow,
   onSelectRow,
   onDeleteRow,
+  onViewRow,
 }: {
   row: any;
   index: number;
@@ -22,6 +23,7 @@ export default function CategoriesTableRow({
   onEditRow: () => void;
   onSelectRow: () => void;
   onDeleteRow: () => void;
+  onViewRow: () => void;
 }) {
   const { name } = row;
 
@@ -33,7 +35,7 @@ export default function CategoriesTableRow({
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
-        <TableCell>{index + 1}</TableCell>
+        <TableCell align="left">{index + 1}</TableCell>
         <TableCell>{name}</TableCell>
         <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
           <IconButton
@@ -48,10 +50,15 @@ export default function CategoriesTableRow({
         <CustomPopover
           open={popover.open}
           onClose={popover.onClose}
-          sx={{ width: 120, height: 300 }}
+          sx={{ width: 120 }}
         >
+          <MenuItem onClick={onViewRow}>
+            <Iconify icon="tabler:eye" />
+            View
+          </MenuItem>
           <MenuItem onClick={onEditRow}>
             <Iconify icon="eva:edit-2-fill" />
+            Edit
           </MenuItem>
         </CustomPopover>
       )}

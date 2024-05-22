@@ -1,5 +1,5 @@
 import { prisma } from "@/lib";
-import { User } from "@/types";
+import { User } from "@prisma/client";
 import { compare } from "bcryptjs";
 
 async function getUser(email: string): Promise<User | null> {

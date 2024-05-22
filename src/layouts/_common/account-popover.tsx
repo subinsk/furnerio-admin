@@ -20,7 +20,6 @@ import { useSnackbar } from "@/components/snackbar";
 import CustomPopover, { usePopover } from "@/components/custom-popover";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { createClient } from "@/lib/supabase/client";
 import { useEffect } from "react";
 import useGetUser from "@/hooks/use-get-user";
 
@@ -45,8 +44,7 @@ const OPTIONS = [
 
 export default function AccountPopover() {
   const router = useRouter();
-  const supabase = createClient();
-
+  const user = useGetUser();
   const { enqueueSnackbar } = useSnackbar();
 
   const popover = usePopover();
@@ -68,10 +66,8 @@ export default function AccountPopover() {
     router.push(path);
   };
 
-  const user = useGetUser();
+  console.log("user: ", user);
 
-  console.log(user);
-  useEffect(() => {}, []);
   return (
     <>
       <IconButton
@@ -91,8 +87,8 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL}
-          alt={user?.displayName}
+          src={user?.user_metadata?.avatar_url}
+          alt={user?.user_metadata?.name}
           sx={{
             width: 36,
             height: 36,
@@ -108,7 +104,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.user_metadata?.name}
           </Typography>
 
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>

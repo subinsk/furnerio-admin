@@ -21,10 +21,10 @@ import {
 import { isEqual } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import CategoriesTableRow from "./categories-table-row";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const TABLE_HEAD = [
-  { id: "sno", label: "S.No.", width: 40 },
+  { id: "sno", label: "S.No.", width: 20 },
   { id: "name", label: "Name", width: 80 },
   { id: "", width: 20 },
 ];
@@ -64,24 +64,24 @@ function applyFilter({
   return inputData;
 }
 
-export default function CategoriesTable() {
+export default function CategoriesTable({
+  categories,
+  categoriesLoading,
+}: {
+  categories: any[];
+  categoriesLoading: boolean;
+}) {
   // hooks
   const router = useRouter();
+  const pathname = usePathname();
+
   const table = useTable({
     defaultDense: true,
   });
 
-  const {
-    categories,
-    categoriesLoading,
-    categoriesError,
-    categoriesValidating,
-    categoriesEmpty,
-  } = useGetCategories();
-
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState<any[]>([]);
   const [filters, setFilters] = useState(defaultFilters);
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -109,6 +109,13 @@ export default function CategoriesTable() {
       }));
     },
     [table]
+  );
+
+  const handleViewRow = useCallback(
+    (slug: string) => {
+      router.push(`${pathname}/${slug}`);
+    },
+    [pathname, router]
   );
 
   const handleEditRow = useCallback(
@@ -145,13 +152,10 @@ export default function CategoriesTable() {
     setFilters(defaultFilters);
   }, []);
 
+  // effects
   useEffect(() => {
-    if (categoriesLoading) {
-      return;
-    }
-
     setTableData(categories);
-  }, [categories, categoriesLoading]);
+  }, [categories]);
 
   return (
     <TableContainer sx={{ position: "relative" }}>
@@ -204,6 +208,7 @@ export default function CategoriesTable() {
                   onSelectRow={() => table.onSelectRow(row.id)}
                   onDeleteRow={() => handleDeleteRow(row.id)}
                   onEditRow={() => handleEditRow(row.id)}
+                  onViewRow={() => handleViewRow(row.slug)}
                 />
               ))}
             <TableEmptyRows

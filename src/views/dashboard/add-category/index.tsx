@@ -5,9 +5,13 @@ import { useSettingsContext } from "@/components/settings";
 import { paths } from "@/routes/paths";
 import AddCategoryForm from "@/sections/dashboard/categories/add-category-form";
 import { Container } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 
 export default function AddCategoryView() {
+  // hooks
   const settings: any = useSettingsContext();
+  const searchParams = useSearchParams();
+  const parentId = searchParams.get("parent");
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>
@@ -27,7 +31,7 @@ export default function AddCategoryView() {
         }}
       />
 
-      <AddCategoryForm />
+      <AddCategoryForm parentId={parentId} />
     </Container>
   );
 }

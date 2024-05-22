@@ -3,7 +3,11 @@ import { RouterLink } from "@/routes/components";
 import { paths } from "@/routes/paths";
 import { Button, Stack } from "@mui/material";
 
-export default function ProductsList() {
+export default function ProductsList({
+  categorySlug,
+}: {
+  categorySlug?: string;
+}) {
   return (
     <Stack spacing={4}>
       <Stack width="100%" justifyContent="flex-end" alignItems="end">

@@ -17,7 +17,11 @@ import { useRouter } from "next/navigation";
 import { imagekit } from "@/lib";
 import { slugify } from "@/utils/slugify";
 
-export default function AddCategoryForm(): JSX.Element {
+export default function AddCategoryForm({
+  parentId,
+}: {
+  parentId?: string | null;
+}): JSX.Element {
   // states
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -74,6 +78,7 @@ export default function AddCategoryForm(): JSX.Element {
     const category = {
       name: data.name,
       description: data.description,
+      parent: parentId,
       image: imageUrl,
     };
 
