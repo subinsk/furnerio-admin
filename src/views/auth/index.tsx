@@ -2,7 +2,7 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 // @mui
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -30,7 +30,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-export default function JwtLoginView() {
+function JwtLoginView() {
   const router = useRouter();
 
   const [errorMsg, setErrorMsg] = useState("");
@@ -160,5 +160,13 @@ export default function JwtLoginView() {
 
       {renderForm}
     </FormProvider>
+  );
+}
+
+export default function AuthView() {
+  return (
+    <Suspense>
+      <JwtLoginView />
+    </Suspense>
   );
 }

@@ -66,8 +66,6 @@ export default function AccountPopover() {
     router.push(path);
   };
 
-  console.log("user: ", user);
-
   return (
     <>
       <IconButton

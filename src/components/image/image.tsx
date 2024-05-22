@@ -1,3 +1,5 @@
+"use client";
+
 import PropTypes from "prop-types";
 import { forwardRef } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -29,8 +31,7 @@ interface ImageProps {
   useIntersectionObserver?: boolean;
   objectFit?: string;
   sx?: object;
-  ref?: any;
-  [x: string]: any;
+  [key: string]: any;
 }
 
 const Image = forwardRef<HTMLSpanElement, ImageProps>(
@@ -78,7 +79,7 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
     const content = (
       <Box
         component={LazyLoadImage}
-        //
+        // @ts-ignore
         alt={alt}
         src={src}
         afterLoad={afterLoad}

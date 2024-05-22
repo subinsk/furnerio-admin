@@ -6,8 +6,9 @@ import { paths } from "@/routes/paths";
 import AddCategoryForm from "@/sections/dashboard/categories/add-category-form";
 import { Container } from "@mui/material";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function AddCategoryView() {
+function AddCategory() {
   // hooks
   const settings: any = useSettingsContext();
   const searchParams = useSearchParams();
@@ -33,5 +34,13 @@ export default function AddCategoryView() {
 
       <AddCategoryForm parentId={parentId} />
     </Container>
+  );
+}
+
+export default function AddCategoryView() {
+  return (
+    <Suspense>
+      <AddCategory />
+    </Suspense>
   );
 }

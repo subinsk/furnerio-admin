@@ -1,12 +1,15 @@
 "use client";
 
 import "@/utils/highlight";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
+
 // @mui
 import { alpha } from "@mui/material/styles";
 //
 import { StyledEditor } from "./styles";
 import Toolbar, { formats } from "./toolbar";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 // ----------------------------------------------------------------------
 
