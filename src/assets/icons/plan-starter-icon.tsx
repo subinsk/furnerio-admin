@@ -1,12 +1,12 @@
-import { memo } from 'react';
+import { memo } from "react";
 // @mui
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 
 // ----------------------------------------------------------------------
 
-function PlanStarterIcon({ ...other }) {
-  const theme = useTheme();
+function PlanStarterIcon({ ...other }: { [x: string]: any }) {
+  const theme: any = useTheme();
 
   const PRIMARY_MAIN = theme.palette.primary.main;
 
@@ -26,7 +26,10 @@ function PlanStarterIcon({ ...other }) {
       <g transform="translate(0 -5)">
         <g transform="translate(0 9.15)">
           <g transform="translate(9.167 19.963)">
-            <path fill={PRIMARY_DARK} d="M53.333 17.467H61.666V24.953H53.333z" />
+            <path
+              fill={PRIMARY_DARK}
+              d="M53.333 17.467H61.666V24.953H53.333z"
+            />
 
             <path
               fill={PRIMARY_DARKER}

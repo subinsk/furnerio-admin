@@ -45,8 +45,10 @@ import { useRouter } from "next/navigation";
 
 export default function AddProductForm({
   currentProduct,
+  categoryId,
 }: {
   currentProduct?: any;
+  categoryId?: string;
 }) {
   const router = useRouter();
 
@@ -324,7 +326,7 @@ export default function AddProductForm({
               }
             />
 
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
               <Typography variant="subtitle2">Gender</Typography>
               <RHFMultiCheckbox
                 row
@@ -332,7 +334,7 @@ export default function AddProductForm({
                 spacing={2}
                 options={PRODUCT_GENDER_OPTIONS}
               />
-            </Stack>
+            </Stack> */}
 
             <Divider sx={{ borderStyle: "dashed" }} />
 
@@ -381,7 +383,7 @@ export default function AddProductForm({
           <Stack spacing={3} sx={{ p: 3 }}>
             <RHFTextField
               name="price"
-              label="Regular Price"
+              label="MRP"
               placeholder="0.00"
               type="number"
               InputLabelProps={{ shrink: true }}
@@ -398,7 +400,7 @@ export default function AddProductForm({
 
             <RHFTextField
               name="priceSale"
-              label="Sale Price"
+              label="Price"
               placeholder="0.00"
               type="number"
               InputLabelProps={{ shrink: true }}

@@ -2,12 +2,36 @@ import numeral from "numeral";
 
 // ----------------------------------------------------------------------
 
+numeral.register("locale", "en-in", {
+  delimiters: {
+    thousands: ",",
+    decimal: ".",
+  },
+  abbreviations: {
+    thousand: "K",
+    million: "M",
+    billion: "B",
+    trillion: "T",
+  },
+  ordinal: function (number) {
+    return number === 1 ? "st" : "th";
+  },
+  currency: {
+    symbol: "₹",
+  },
+});
+
 export function fNumber(number: number): string {
   return numeral(number).format();
 }
 
 export function fCurrency(number: number): string {
+  // Use the custom locale for Indian Rupees
+  numeral.locale("en-in");
   const format = number ? numeral(number).format("$0,0.00") : "";
+
+  // Switch back to default locale if needed
+  numeral.locale("en");
 
   return result(format, ".00");
 }

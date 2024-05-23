@@ -5,10 +5,10 @@ import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RHFEditor, RHFTextField, RHFUpload } from "@/components/hook-form";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Button, Stack, Typography } from "@mui/material";
-import { addCategory } from "@/services/category.service";
+import { Button, Stack, TextField, Typography } from "@mui/material";
+import { addCategory, getCategoryById } from "@/services/category.service";
 import { categorySchema } from "@/schema/category";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Label from "@/components/label";
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "@/config";
 import { CLOUDINARY_API_URL } from "@/lib/cloudinary";
@@ -24,6 +24,9 @@ export default function AddCategoryForm({
 }): JSX.Element {
   // states
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [parentCategory, setParentCategory] = useState<string>("N/A");
+
+  console.log("parent: ", parentId);
 
   // hooks
   const router = useRouter();
@@ -97,17 +100,33 @@ export default function AddCategoryForm({
       });
     } finally {
       setIsSubmitting(false);
-      router.push("/dashboard/categories");
+      router.back();
     }
   });
+
+  // effects
+  useEffect(() => {
+    if (parentId) {
+      getCategoryById(parentId)
+        .then((res) => {
+          setParentCategory(res.data.name);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      setParentCategory("N/A");
+    }
+  }, [parentId]);
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3}>
         <RHFTextField name="name" label="Category Name" />
         <RHFEditor name="description" placeholder="Category Description" />
+        <TextField value={parentCategory} disabled />
         <Stack gap={2}>
-          <Typography>Category Image</Typography>
+          <Typography variant="h6">Category Image</Typography>
           <RHFUpload
             name="image"
             multiple={false}

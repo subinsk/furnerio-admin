@@ -64,6 +64,8 @@ export default function CategoriesView({
     setTab(newValue);
   };
 
+  //
+
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>
       <CustomBreadcrumbs
@@ -86,7 +88,7 @@ export default function CategoriesView({
           <Tab label="Categories" {...a11yProps(0)} />
           <Tab
             label="Products"
-            disabled={categorySlug ? true : false}
+            disabled={categorySlug ? false : true}
             {...a11yProps(1)}
           />
         </Tabs>
@@ -96,9 +98,9 @@ export default function CategoriesView({
         <CategoriesList categorySlug={categorySlug} />
       </CustomTabPanel>
 
-      {/* <CustomTabPanel value={tab} index={1}>
+      <CustomTabPanel value={tab} index={1}>
         <ProductsList categorySlug={categorySlug} />
-      </CustomTabPanel> */}
+      </CustomTabPanel>
     </Container>
   );
 }

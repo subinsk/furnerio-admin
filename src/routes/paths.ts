@@ -1,7 +1,16 @@
+import { _id, _postTitles } from '@/_mock/assets';
+
 const ROOTS = {
   AUTH: "/auth",
   DASHBOARD: "/dashboard",
 };
+
+
+// ----------------------------------------------------------------------
+
+const MOCK_ID = _id[1];
+
+const MOCK_TITLE = _postTitles[2];
 
 export const paths = {
   auth: {
@@ -20,6 +29,10 @@ export const paths = {
     },
     orders: {
       root: `${ROOTS.DASHBOARD}/orders`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/order/${id}`,
+      demo: {
+        details: `${ROOTS.DASHBOARD}/order/${MOCK_ID}`,
+      },
     },
     bannerImages: {
       root: `${ROOTS.DASHBOARD}/banner-images`,

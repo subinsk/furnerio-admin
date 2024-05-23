@@ -52,7 +52,7 @@ export default function Header({ onOpenNav }: { onOpenNav: () => void }) {
         </IconButton>
       )}
 
-      <Searchbar />
+      {/* <Searchbar /> */}
 
       <Stack
         flexGrow={1}

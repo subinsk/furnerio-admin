@@ -2,7 +2,7 @@ import Iconify from "@/components/iconify";
 import { RouterLink } from "@/routes/components";
 import { paths } from "@/routes/paths";
 import { useGetCategories } from "@/services/category.service";
-import { Button, Stack } from "@mui/material";
+import { Button, Checkbox, Stack } from "@mui/material";
 import CategoriesTable from "./categories-table";
 
 export default function CategoriesList({

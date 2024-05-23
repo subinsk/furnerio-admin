@@ -1,3 +1,5 @@
+"use client"
+
 import merge from "lodash/merge";
 //
 import { defaultProps } from "./default-props";

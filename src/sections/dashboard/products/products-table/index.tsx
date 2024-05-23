@@ -12,10 +12,7 @@ import {
   useTable,
 } from "@/components/table";
 import { useBoolean } from "@/hooks/use-boolean";
-import {
-  deleteCategoryById,
-  useGetCategories,
-} from "@/services/category.service";
+import { deleteCategoryById } from "@/services/category.service";
 import {
   IconButton,
   Table,
@@ -25,22 +22,16 @@ import {
 } from "@mui/material";
 import { isEqual } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import CategoriesTableRow from "./categories-table-row";
 import { usePathname, useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
+import ProductsTableRow from "./products-table-row";
 
 const TABLE_HEAD = [
   { id: "sno", label: "S.No.", align: "center" },
   { id: "name", label: "Name" },
-  { id: "parent", label: "Parent Category", align: "center" },
-  {
-    id: "createdAt",
-    label: "Created",
-  },
-  {
-    id: "updatedAt",
-    label: "Updated",
-  },
+  { id: "category", label: "Category" },
+  { id: "mrp", label: "MRP (Rs.)" },
+  { id: "price", label: "Price (Rs.)" },
   { id: "" },
 ];
 
@@ -79,12 +70,12 @@ function applyFilter({
   return inputData;
 }
 
-export default function CategoriesTable({
-  categories,
-  categoriesLoading,
+export default function ProductsTable({
+  products,
+  productsLoading,
 }: {
-  categories: any[];
-  categoriesLoading: boolean;
+  products: any[];
+  productsLoading: boolean;
 }) {
   // hooks
   const router = useRouter();
@@ -97,7 +88,36 @@ export default function CategoriesTable({
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState<any[]>([]);
+  const [tableData, setTableData] = useState<any[]>([
+    {
+      id: "1",
+      name: "Clemency Bed with Box Storage",
+      category: "King Size Beds",
+      mrp: "13,499",
+      price: "29,799",
+    },
+    {
+      id: "2",
+      name: "Walken Sheesham Wood Bed with Full Drawer Storage",
+      category: "King Size Beds",
+      price: "43,989",
+      mrp: "71,9999",
+    },
+    {
+      id: "3",
+      name: "Brixton Sheesham Wood Bed With Box Storage",
+      category: "King Size Beds",
+      price: "29,989",
+      mrp: "39,999",
+    },
+    {
+      id: "4",
+      name: "Evaline Hydraulic Bed With Box Storage",
+      category: "King Size Beds",
+      price: "27,989",
+      mrp: "37,399",
+    },
+  ]);
   const [filters, setFilters] = useState(defaultFilters);
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -180,9 +200,9 @@ export default function CategoriesTable({
   }, []);
 
   // effects
-  useEffect(() => {
-    setTableData(categories);
-  }, [categories]);
+  //   useEffect(() => {
+  //     setTableData(categories);
+  //   }, [categories]);
 
   return (
     <TableContainer sx={{ position: "relative" }}>
@@ -227,7 +247,7 @@ export default function CategoriesTable({
                 table.page * table.rowsPerPage + table.rowsPerPage
               )
               .map((row: any, index: number) => (
-                <CategoriesTableRow
+                <ProductsTableRow
                   key={row.id}
                   row={row}
                   index={index}

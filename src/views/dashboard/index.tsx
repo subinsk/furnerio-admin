@@ -23,10 +23,15 @@ export default function DashboardView() {
       icon: "truck-delivery",
       href: paths.dashboard.orders.root,
     },
+    {
+       title: "Banner Images",
+      icon: "photo",
+      href: paths.dashboard.bannerImages.root,
+    }
   ];
 
   return (
-    <Stack direction="row" spacing="24px" sx={{ mt: 3, p: 3 }} flexWrap="wrap">
+    <Stack direction="row" spacing="24px" sx={{ mt: 1, p: 3 }} flexWrap="wrap">
       {items.map((item, index) => (
         <Card
           key={index}
@@ -36,11 +41,12 @@ export default function DashboardView() {
             width: "270px",
             height: "200px",
             padding: "12px",
+            textDecoration: "none",
           }}
         >
           <Stack direction="row" alignItems="center" spacing="12px">
-            <Iconify icon={`tabler:${item.icon}`} width={32} />
-            <Typography variant="h4">{item.title}</Typography>
+            <Iconify icon={`tabler:${item.icon}`} width={44} />
+            <Typography variant="h5">{item.title}</Typography>
           </Stack>
         </Card>
       ))}

@@ -8,7 +8,7 @@ import TablePagination from "@mui/material/TablePagination";
 interface TablePaginationCustomProps {
   dense: boolean;
   onChangeDense: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  rowsPerPageOptions: number[];
+  rowsPerPageOptions?: number[];
   count: number; // Add count prop
   onPageChange: (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -16,7 +16,8 @@ interface TablePaginationCustomProps {
   ) => void; // Add onPageChange prop
   page: number; // Add page prop
   rowsPerPage: number; // Add rowsPerPage prop
-  sx: object;
+  sx?: object;
+  [x: string]: any;
 }
 
 export default function TablePaginationCustom({
@@ -28,6 +29,7 @@ export default function TablePaginationCustom({
   page,
   rowsPerPage,
   sx,
+  ...other
 }: TablePaginationCustomProps) {
   return (
     <Box sx={{ position: "relative", ...sx }}>
@@ -41,6 +43,7 @@ export default function TablePaginationCustom({
         sx={{
           borderTopColor: "transparent",
         }}
+        {...other}
       />
 
       {onChangeDense && (

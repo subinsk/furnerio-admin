@@ -5,9 +5,12 @@ import { useSettingsContext } from "@/components/settings";
 import { paths } from "@/routes/paths";
 import AddProductForm from "@/sections/dashboard/products/add-product-form";
 import { Container } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 
 export default function AddProductView() {
   const settings: any = useSettingsContext();
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("category-id");
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>
@@ -28,7 +31,7 @@ export default function AddProductView() {
           mb: { xs: 3, md: 5 },
         }}
       />
-      <AddProductForm />
+      <AddProductForm categoryId={categoryId} />
     </Container>
   );
 }

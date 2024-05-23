@@ -33,7 +33,16 @@ export async function GET(request: NextRequest) {
       });
     }
     else {
-      categories = await prisma.category.findMany();
+      categories = await prisma.category.findMany({
+        include: {
+          parent: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      });
     }
 
     return sendResponse({
@@ -55,14 +64,30 @@ export async function POST(request: Request) {
   try {
     const res: any = await validateApiRequest(request);
 
-    let parentSlugs = ''
+    let parentSlugs = []
+    let parent = res.parent
+
+    while (parent) {
+      const parentCategory = await prisma.category.findUnique({
+        where: {
+          id: parent
+        }
+      })
+
+      if (!parentCategory) break
+
+      parentSlugs.push(parentCategory.slug)
+      parent = parentCategory.parentId
+    }
 
     const createResponse = await prisma.category.create({
       data: {
         name: res.name,
         description: res.description,
         image: res.image,
-        slug: slugify(res.name),
+        slug: slugify(
+          parentSlugs.length === 0 ? res.name :
+            parentSlugs.reverse().join('-') + '-' + res.name),
         parent: res.parent ? {
           connect: {
             id: res.parent
@@ -81,6 +106,31 @@ export async function POST(request: Request) {
       data: e.message,
       success: false,
       message: 'Failed to create category',
+    })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const res: any = await request.json()
+
+    const deleteResponse = await prisma.category.delete({
+      where: {
+        id: res.id
+      }
+    });
+
+    return sendResponse({
+      data: deleteResponse,
+      success: true,
+      message: 'Category deleted successfully',
+    })
+  }
+  catch (err: any) {
+    return sendResponse({
+      data: err.message,
+      success: false,
+      message: 'Failed to delete category',
     })
   }
 }

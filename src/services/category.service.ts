@@ -42,3 +42,23 @@ export const addCategory = async (payload: any) => {
   console.log("res:", res);
   return res.data;
 };
+
+export const getCategoryById = async (id: string) => {
+  const res = await api.get(`/category?id=${id}`);
+  return res.data;
+}
+
+export const getCategoryBySlug = async (slug: string) => {
+  const res = await api.get(`/category?slug=${slug}`);
+  return res.data;
+}
+
+export const deleteCategoryById = async (id: string) => {
+  const res = await api.delete(`/category`, {
+    data: {
+      id
+    }
+  });
+
+  return res.data;
+}

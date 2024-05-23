@@ -1,12 +1,12 @@
-import { memo } from 'react';
+import { memo } from "react";
 // @mui
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 
 // ----------------------------------------------------------------------
 
-function PlanFreeIcon({ ...other }) {
-  const theme = useTheme();
+function PlanFreeIcon({ ...other }: { [x: string]: any }) {
+  const theme: any = useTheme();
 
   const PRIMARY_MAIN = theme.palette.primary.main;
 

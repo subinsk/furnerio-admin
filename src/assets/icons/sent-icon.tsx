@@ -1,12 +1,12 @@
-import { memo } from 'react';
+import { memo } from "react";
 // @mui
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 
 // ----------------------------------------------------------------------
 
-function SentIcon({ ...other }) {
-  const theme = useTheme();
+function SentIcon({ ...other }: { [x: string]: any }) {
+  const theme: any = useTheme();
 
   const PRIMARY_MAIN = theme.palette.primary.main;
 
@@ -33,7 +33,7 @@ function SentIcon({ ...other }) {
       />
 
       <g
-        style={{ mixBlendMode: 'overlay' }}
+        style={{ mixBlendMode: "overlay" }}
         fill="#fff"
         fillOpacity="0.04"
         filter="url(#filter0_i_1870_134242)"

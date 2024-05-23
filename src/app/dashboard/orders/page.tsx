@@ -1,10 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import OrdersView from "@/views/dashboard/orders";
 
 export default async function Page() {
- 
-  return (
-    <div>
-      <h1>Orders</h1>
-    </div>
-  );
+  return <OrdersView />;
 }

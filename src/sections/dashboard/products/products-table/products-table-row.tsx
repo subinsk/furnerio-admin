@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@mui/material";
 
-export default function CategoriesTableRow({
+export default function ProductsTableRow({
   row,
   index,
   selected,
@@ -28,8 +28,7 @@ export default function CategoriesTableRow({
   onDeleteRow: () => void;
   onViewRow: () => void;
 }) {
-  const { name, createdAt, updatedAt, parent } = row;
-  console.log("row", row);
+  const { name, mrp, price, category } = row;
 
   const popover = usePopover();
 
@@ -41,9 +40,9 @@ export default function CategoriesTableRow({
         </TableCell> */}
         <TableCell align="center">{index + 1}</TableCell>
         <TableCell>{name}</TableCell>
-        <TableCell align="center">{parent?.name || "-"}</TableCell>
-        <TableCell>{fToNow(createdAt)}</TableCell>
-        <TableCell>{fToNow(updatedAt)}</TableCell>
+        <TableCell>{category}</TableCell>
+        <TableCell>{mrp}</TableCell>
+        <TableCell>{price}</TableCell>
         <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
           <IconButton
             color={popover.open ? "inherit" : "default"}
