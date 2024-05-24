@@ -71,6 +71,10 @@ export async function signInWithGoogle() {
     },
   });
 
+  if (data.url) {
+    redirect(data.url) // use the redirect API for your server framework
+  }
+
   if (error) {
     redirect('/error')
   }
