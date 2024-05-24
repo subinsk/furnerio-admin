@@ -48,7 +48,7 @@ export default function AddProductForm({
   categoryId,
 }: {
   currentProduct?: any;
-  categoryId?: string;
+  categoryId?: string | null;
 }) {
   const router = useRouter();
 

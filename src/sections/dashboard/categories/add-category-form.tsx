@@ -25,8 +25,8 @@ export default function AddCategoryForm({
   parentId,
   editCategoryId,
 }: {
-  parentId?: string;
-  editCategoryId?: string;
+  parentId?: string | null;
+  editCategoryId?: string | null;
 }): JSX.Element {
   // states
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

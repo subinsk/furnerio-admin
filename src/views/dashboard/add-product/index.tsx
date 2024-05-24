@@ -6,8 +6,9 @@ import { paths } from "@/routes/paths";
 import AddProductForm from "@/sections/dashboard/products/add-product-form";
 import { Container } from "@mui/material";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function AddProductView() {
+function AddProduct() {
   const settings: any = useSettingsContext();
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("category-id");
@@ -33,5 +34,13 @@ export default function AddProductView() {
       />
       <AddProductForm categoryId={categoryId} />
     </Container>
+  );
+}
+
+export default function AddProductView() {
+  return (
+    <Suspense>
+      <AddProduct />
+    </Suspense>
   );
 }
