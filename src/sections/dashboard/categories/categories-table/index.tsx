@@ -8,6 +8,7 @@ import {
   TableEmptyRows,
   TableHeadCustom,
   TableNoData,
+  TablePaginationCustom,
   TableSelectedAction,
   useTable,
 } from "@/components/table";
@@ -185,6 +186,7 @@ export default function CategoriesTable({
   }, [categories]);
 
   return (
+    <>
     <TableContainer sx={{ position: "relative" }}>
       <TableSelectedAction
         dense={table.dense}
@@ -252,5 +254,16 @@ export default function CategoriesTable({
         </Table>
       </Scrollbar>
     </TableContainer>
+    <TablePaginationCustom
+            count={dataFiltered.length}
+            page={table.page}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+            //
+            dense={table.dense}
+            onChangeDense={table.onChangeDense}
+          />
+          </>
   );
 }

@@ -115,10 +115,7 @@ export default function CategoriesView({
       </CustomTabPanel>
 
       <CustomTabPanel value={tab} index={1}>
-        {
-          category &&
-        <ProductsList categoryId={category.id} />
-        }
+        {category && <ProductsList categoryId={category.id} />}
       </CustomTabPanel>
     </Container>
   );

@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: Request) {
   try {
-    const res: any = await validateApiRequest(request);
+    const res: any = await request.json();
 
     let parentSlugs = []
     let parent = res.parent
