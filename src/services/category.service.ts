@@ -43,6 +43,11 @@ export const addCategory = async (payload: any) => {
   return res.data;
 };
 
+export const updateCategory = async (payload: any) => {
+  const res = await api.put("/category", payload);
+  return res.data;
+};
+
 export const getCategoryById = async (id: string) => {
   const res = await api.get(`/category?id=${id}`);
   return res.data;

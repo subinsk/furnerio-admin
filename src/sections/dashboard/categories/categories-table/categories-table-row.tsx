@@ -29,7 +29,6 @@ export default function CategoriesTableRow({
   onViewRow: () => void;
 }) {
   const { name, createdAt, updatedAt, parent } = row;
-  console.log("row", row);
 
   const popover = usePopover();
 
@@ -40,7 +39,9 @@ export default function CategoriesTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         <TableCell align="center">{index + 1}</TableCell>
-        <TableCell>{name}</TableCell>
+        <TableCell sx={{
+          cursor: 'pointer'
+        }} onClick={onViewRow}>{name}</TableCell>
         <TableCell align="center">{parent?.name || "-"}</TableCell>
         <TableCell>{fToNow(createdAt)}</TableCell>
         <TableCell>{fToNow(updatedAt)}</TableCell>

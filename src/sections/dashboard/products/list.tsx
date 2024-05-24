@@ -11,6 +11,7 @@ export default function ProductsList({ categoryId }: { categoryId?: string }) {
         <Button
           variant="contained"
           startIcon={<Iconify icon="tabler:plus" />}
+          disabled={!categoryId}
           color="primary"
           sx={{
             width: "180px",

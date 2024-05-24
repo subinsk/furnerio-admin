@@ -6,7 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RHFEditor, RHFTextField, RHFUpload } from "@/components/hook-form";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import { addCategory, getCategoryById } from "@/services/category.service";
+import {
+  addCategory,
+  getCategoryById,
+  updateCategory,
+} from "@/services/category.service";
 import { categorySchema } from "@/schema/category";
 import { useCallback, useEffect, useState } from "react";
 import Label from "@/components/label";
@@ -19,14 +23,15 @@ import { slugify } from "@/utils/slugify";
 
 export default function AddCategoryForm({
   parentId,
+  editCategoryId,
 }: {
-  parentId?: string | null;
+  parentId?: string;
+  editCategoryId?: string;
 }): JSX.Element {
   // states
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [parentCategory, setParentCategory] = useState<string>("N/A");
-
-  console.log("parent: ", parentId);
+  const [isCategoryLoading, setIsCategoryLoading] = useState<boolean>(false);
 
   // hooks
   const router = useRouter();
@@ -57,6 +62,27 @@ export default function AddCategoryForm({
     setValue("image", null);
   }, [setValue]);
 
+  const getCategory = useCallback(async () => {
+    if (editCategoryId) {
+      try {
+        setIsCategoryLoading(true);
+        const response = await getCategoryById(editCategoryId);
+
+        setValue("name", response.data.name);
+        setValue("description", response.data.description);
+        setValue("image", response.data.image);
+        setParentCategory(response.data.parent.name);
+      } catch (error: any) {
+        console.error("error:", error);
+        enqueueSnackbar("Failed to fetch category", {
+          variant: "error",
+        });
+      } finally {
+        setIsCategoryLoading(false);
+      }
+    }
+  }, [editCategoryId, setValue, enqueueSnackbar]);
+
   const onSubmit = handleSubmit(async (data: FieldValues) => {
     setIsSubmitting(true);
 
@@ -86,13 +112,26 @@ export default function AddCategoryForm({
     };
 
     try {
-      const response = await addCategory(category);
-
-      if (response.success) {
-        enqueueSnackbar("Category added successfully", {
-          variant: "success",
+      if (editCategoryId) {
+        const response = await updateCategory({
+          id: editCategoryId,
+          ...category,
         });
-      } else throw new Error(response.message);
+
+        if (response.success) {
+          enqueueSnackbar("Category updated successfully", {
+            variant: "success",
+          });
+        } else throw new Error(response.message);
+      } else {
+        const response = await addCategory(category);
+
+        if (response.success) {
+          enqueueSnackbar("Category added successfully", {
+            variant: "success",
+          });
+        } else throw new Error(response.message);
+      }
     } catch (error) {
       console.error("error:", error);
       enqueueSnackbar("Failed to add category", {
@@ -100,29 +139,36 @@ export default function AddCategoryForm({
       });
     } finally {
       setIsSubmitting(false);
-      router.back();
+      if (!editCategoryId) {
+        router.back();
+      }
     }
   });
 
-  // effects
-  useEffect(() => {
-    if (parentId) {
-      getCategoryById(parentId)
-        .then((res) => {
-          setParentCategory(res.data.name);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } else {
-      setParentCategory("N/A");
+  const getParentCategory = useCallback(async () => {
+    if (!parentId) return;
+
+    try {
+      const response = await getCategoryById(parentId);
+      setParentCategory(response.data.name);
+    } catch (error) {
+      console.error("error:", error);
     }
   }, [parentId]);
+
+  // effects
+  useEffect(() => {
+    getParentCategory();
+  }, [getParentCategory]);
+
+  useEffect(() => {
+    getCategory();
+  }, [getCategory]);
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3}>
-        <RHFTextField name="name" label="Category Name" />
+        <RHFTextField name="name" placeholder="Category Name" />
         <RHFEditor name="description" placeholder="Category Description" />
         <TextField value={parentCategory} disabled />
         <Stack gap={2}>
@@ -137,7 +183,7 @@ export default function AddCategoryForm({
           />
         </Stack>
         <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-          Add Category
+          {editCategoryId ? "Edit Category" : "Add Category"}
         </LoadingButton>
       </Stack>
     </FormProvider>

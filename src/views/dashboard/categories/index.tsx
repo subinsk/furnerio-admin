@@ -6,7 +6,10 @@ import { paths } from "@/routes/paths";
 import AddCategoryForm from "@/sections/dashboard/categories/add-category-form";
 import CategoriesList from "@/sections/dashboard/categories/categories-list";
 import ProductsList from "@/sections/dashboard/products/list";
-import { useGetCategories } from "@/services/category.service";
+import {
+  getCategoryBySlug,
+  useGetCategories,
+} from "@/services/category.service";
 import {
   Accordion,
   AccordionDetails,
@@ -18,7 +21,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,13 +61,26 @@ export default function CategoriesView({
 
   // states
   const [tab, setTab] = useState<number>(0);
+  const [category, setCategory] = useState<any>(null);
 
   // functions
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
 
-  //
+  const getCategory = useCallback(async () => {
+    if (!categorySlug) return;
+
+    const response = await getCategoryBySlug(categorySlug);
+    setCategory(response.data);
+  }, [categorySlug]);
+
+  // effects
+  useEffect(() => {
+    if (categorySlug) {
+      getCategory();
+    }
+  }, [getCategory, categorySlug]);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>
@@ -99,7 +115,10 @@ export default function CategoriesView({
       </CustomTabPanel>
 
       <CustomTabPanel value={tab} index={1}>
-        <ProductsList categorySlug={categorySlug} />
+        {
+          category &&
+        <ProductsList categoryId={category.id} />
+        }
       </CustomTabPanel>
     </Container>
   );
