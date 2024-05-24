@@ -6,6 +6,18 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { BASE_URL } from '@/config'
 
+const getURL = () => {
+  let url =
+    BASE_URL ?? // Set this to your site URL in production env.
+    process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Automatically set by Vercel.
+    'http://localhost:3001/'
+  // Make sure to include `https://` when not localhost.
+  url = url.includes('http') ? url : `https://${url}`
+  // Make sure to include a trailing `/`.
+  url = url.charAt(url.length - 1) === '/' ? url : `${url}/`
+  return url
+}
+
 export async function login(formData: FormData) {
   const supabase = createClient()
 
@@ -56,7 +68,7 @@ export async function signInWithGoogle() {
         access_type: "offline",
         prompt: "consent",
       },
-      redirectTo: `${BASE_URL}/auth/callback`,
+      redirectTo: `${getURL()}auth/callback`,
     },
   });
 
