@@ -28,7 +28,7 @@ export default function ProductsTableRow({
   onDeleteRow: () => void;
   onViewRow: () => void;
 }) {
-  const { name, mrp, price, category } = row;
+  const { name,sku, mrp, price, category, quantity,   } = row;
 
   const popover = usePopover();
 
@@ -40,9 +40,11 @@ export default function ProductsTableRow({
         </TableCell> */}
         <TableCell align="center">{index + 1}</TableCell>
         <TableCell>{name}</TableCell>
-        <TableCell>{category}</TableCell>
+        <TableCell>{sku}</TableCell>
+        <TableCell>{category.name}</TableCell>
         <TableCell>{mrp}</TableCell>
         <TableCell>{price}</TableCell>
+        <TableCell>{quantity}</TableCell>
         <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
           <IconButton
             color={popover.open ? "inherit" : "default"}
@@ -58,10 +60,6 @@ export default function ProductsTableRow({
           onClose={popover.onClose}
           sx={{ width: 120 }}
         >
-          <MenuItem onClick={onViewRow}>
-            <Iconify icon="tabler:eye" />
-            View
-          </MenuItem>
           <MenuItem onClick={onEditRow}>
             <Iconify icon="eva:edit-2-fill" />
             Edit

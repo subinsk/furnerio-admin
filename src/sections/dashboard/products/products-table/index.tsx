@@ -29,9 +29,11 @@ import ProductsTableRow from "./products-table-row";
 const TABLE_HEAD = [
   { id: "sno", label: "S.No.", align: "center" },
   { id: "name", label: "Name" },
+  { id: "sku", label: "SKU" },
   { id: "category", label: "Category" },
   { id: "mrp", label: "MRP (Rs.)" },
   { id: "price", label: "Price (Rs.)" },
+  { id: "quantity", label: "Quantity" },
   { id: "" },
 ];
 
@@ -88,36 +90,7 @@ export default function ProductsTable({
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState<any[]>([
-    {
-      id: "1",
-      name: "Clemency Bed with Box Storage",
-      category: "King Size Beds",
-      mrp: "13,499",
-      price: "29,799",
-    },
-    {
-      id: "2",
-      name: "Walken Sheesham Wood Bed with Full Drawer Storage",
-      category: "King Size Beds",
-      price: "43,989",
-      mrp: "71,9999",
-    },
-    {
-      id: "3",
-      name: "Brixton Sheesham Wood Bed With Box Storage",
-      category: "King Size Beds",
-      price: "29,989",
-      mrp: "39,999",
-    },
-    {
-      id: "4",
-      name: "Evaline Hydraulic Bed With Box Storage",
-      category: "King Size Beds",
-      price: "27,989",
-      mrp: "37,399",
-    },
-  ]);
+  const [tableData, setTableData] = useState<any[]>([]);
   const [filters, setFilters] = useState(defaultFilters);
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -155,8 +128,8 @@ export default function ProductsTable({
   );
 
   const handleEditRow = useCallback(
-    (id: string) => {
-      router.push("/edit/" + id);
+    (id: string, categoryId: string) => {
+      router.push("/dashboard/edit-product/" + id + "?category-id=" + categoryId);
     },
     [router]
   );
@@ -199,10 +172,10 @@ export default function ProductsTable({
     setFilters(defaultFilters);
   }, []);
 
-  // effects
-  //   useEffect(() => {
-  //     setTableData(categories);
-  //   }, [categories]);
+  //effects
+  useEffect(() => {
+    setTableData(products);
+  }, [products]);
 
   return (
     <TableContainer sx={{ position: "relative" }}>
@@ -254,7 +227,7 @@ export default function ProductsTable({
                   selected={table.selected.includes(row.id)}
                   onSelectRow={() => table.onSelectRow(row.id)}
                   onDeleteRow={() => handleDeleteRow(row.id)}
-                  onEditRow={() => handleEditRow(row.id)}
+                  onEditRow={() => handleEditRow(row.id, row.category.id)}
                   onViewRow={() => handleViewRow(row.slug)}
                 />
               ))}

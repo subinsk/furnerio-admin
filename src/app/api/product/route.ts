@@ -1,10 +1,58 @@
 import { prisma, validateApiRequest } from "@/lib";
 import sendResponse from "@/lib/response";
 import { slugify } from "@/utils/slugify";
+import { NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
-        const products = await prisma.product.findMany()
+        const searchParams = request.nextUrl.searchParams
+        const slug = searchParams.get('slug')
+        const id = searchParams.get('id')
+
+        let products: any = []
+
+        if (slug) {
+            products = await prisma.product.findUnique({
+                where: {
+                    slug: slug
+                },
+                include:{
+                    category: {
+                        select:{
+                            id: true,
+                            name: true
+                        }
+                    }
+                }
+            });
+        }
+        else if (id) {
+            products = await prisma.product.findUnique({
+                where: {
+                    id: id
+                },
+                include:{
+                    category: {
+                        select:{
+                            id: true,
+                            name: true
+                        }
+                    }
+                }
+            });
+        }
+        else {
+            products = await prisma.product.findMany({
+                include:{
+                    category: {
+                        select:{
+                            id: true,
+                            name: true
+                        }
+                    }
+                }
+            });
+        }
 
         return sendResponse({
             data: products,
@@ -23,23 +71,22 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        const res: any = await validateApiRequest(request)
+        const res: any = await request.json()
+        console.log('res: ', res)
+        const {
+            categoryId,
+            ...rest
+        } = res
 
         const createProductResponse = await prisma.product.create({
             data: {
-                name: res.name,
-                description: res.description,
-                price: res.price,
-                image: res.image,
+                ...rest,
+                slug: slugify(`${res.name}-${res.sku}`),
                 category: {
                     connect: {
-                        id: res.categoryId
+                        id: categoryId
                     }
-                },
-                sku: res.sku,
-                slug: slugify(
-                    `${res.name} ${res.sku}`
-                ),
+                }
             }
         })
 
@@ -54,6 +101,60 @@ export async function POST(request: Request) {
             data: e.message,
             success: false,
             message: 'Failed to create product'
+        })
+    }
+}
+
+export async function PUT(request: Request) {
+    try {
+        const res: any = await request.json()
+
+        const updateProductResponse = await prisma.product.update({
+            where: {
+                id: res.id
+            },
+            data: {
+                ...res,
+                slug: slugify(`${res.name}-${res.sku}`),
+            }
+        })
+
+        return sendResponse({
+            data: updateProductResponse,
+            success: true,
+            message: 'Product updated successfully'
+        })
+    }
+    catch (e: any) {
+        return sendResponse({
+            data: e.message,
+            success: false,
+            message: 'Failed to update product'
+        })
+    }
+}
+
+export async function DELETE(request: Request) {
+    try {
+        const res: any = await request.json()
+
+        const deleteProductResponse = await prisma.product.delete({
+            where: {
+                id: res.id
+            }
+        })
+
+        return sendResponse({
+            data: deleteProductResponse,
+            success: true,
+            message: 'Product deleted successfully'
+        })
+    }
+    catch (e: any) {
+        return sendResponse({
+            data: e.message,
+            success: false,
+            message: 'Failed to delete product'
         })
     }
 }

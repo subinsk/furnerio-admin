@@ -41,7 +41,12 @@ import FormProvider, {
   RHFAutocomplete,
   RHFMultiCheckbox,
 } from "@/components/hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TextField } from "@mui/material";
+import { getCategoryById } from "@/services/category.service";
+import { createProduct, updateProduct } from "@/services/product.service";
+import { imagekit } from "@/lib";
+import { slugify } from "@/utils/slugify";
 
 export default function AddProductForm({
   currentProduct,
@@ -57,16 +62,17 @@ export default function AddProductForm({
   const { enqueueSnackbar } = useSnackbar();
 
   const [includeTaxes, setIncludeTaxes] = useState(false);
+  const [category, setCategory] = useState<any | string>("");
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
-    images: Yup.array().min(1, "Images is required"),
-    tags: Yup.array().min(2, "Must have at least 2 tags"),
-    category: Yup.string().required("Category is required"),
-    price: Yup.number().moreThan(0, "Price should not be $0.00"),
-    description: Yup.string().required("Description is required"),
-    // not required
-    taxes: Yup.number(),
+    sku: Yup.string().required("SKU is required"),
+    code: Yup.string(),
+    subDescription: Yup.string(),
+    content: Yup.string(),
+    // images: Yup.array().min(1, "Images is required"),
+    images: Yup.array(),
+    quantity: Yup.number().moreThan(0, "Quantity should not be 0"),
     newLabel: Yup.object().shape({
       enabled: Yup.boolean(),
       content: Yup.string(),
@@ -75,26 +81,22 @@ export default function AddProductForm({
       enabled: Yup.boolean(),
       content: Yup.string(),
     }),
+    price: Yup.number().moreThan(0, "Price should not be Rs. 0.00"),
+    mrp: Yup.number().moreThan(0, "MRP should not be Rs. 0.00"),
   });
 
   const defaultValues = useMemo(
     () => ({
       name: currentProduct?.name || "",
-      description: currentProduct?.description || "",
       subDescription: currentProduct?.subDescription || "",
+      content: currentProduct?.content || "",
       images: currentProduct?.images || [],
       //
       code: currentProduct?.code || "",
       sku: currentProduct?.sku || "",
       price: currentProduct?.price || 0,
       quantity: currentProduct?.quantity || 0,
-      priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [],
-      taxes: currentProduct?.taxes || 0,
-      gender: currentProduct?.gender || "",
-      category: currentProduct?.category || "",
-      colors: currentProduct?.colors || [],
-      sizes: currentProduct?.sizes || [],
+      mrp: currentProduct?.mrp || 0,
       newLabel: currentProduct?.newLabel || { enabled: false, content: "" },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: "" },
     }),
@@ -122,23 +124,72 @@ export default function AddProductForm({
     }
   }, [currentProduct, defaultValues, reset]);
 
-  useEffect(() => {
-    if (includeTaxes) {
-      setValue("taxes", 0);
-    } else {
-      setValue("taxes", currentProduct?.taxes || 0);
+  const getParentCategory = useCallback(async () => {
+    if (!categoryId) return;
+
+    try {
+      const response = await getCategoryById(categoryId);
+      setCategory(response.data.name);
+    } catch (error) {
+      console.error("error:", error);
     }
-  }, [currentProduct?.taxes, includeTaxes, setValue]);
+  }, [categoryId]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(currentProduct ? "Update success!" : "Create success!");
-      console.info("DATA", data);
+      console.info("DATA: ", data);
+      let response = null;
+      const imageUrls: string[] = [];
+
+      if (data.images.length > 0) {
+        try {
+          let uploadPromises = data.images.map((image: any) => {
+            return imagekit.upload({
+              file: image,
+              fileName: slugify(data.name),
+              folder: "/furnerio/products",
+            });
+          });
+
+          let responses = await Promise.all(uploadPromises);
+
+          responses.forEach((response) => {
+            imageUrls.push(response.url);
+          });
+        } catch (error) {
+          enqueueSnackbar("Failed to upload image", {
+            variant: "error",
+          });
+        }
+      }
+
+      if (!currentProduct) {
+        response = await createProduct({
+          ...data,
+          images: imageUrls,
+          categoryId,
+          newLabel: data.newLabel.content,
+          saleLabel: data.saleLabel.content,
+        });
+      } else {
+        response = await updateProduct({
+          ...data,
+          id: currentProduct?.id,
+          images: imageUrls,
+          categoryId,
+          newLabel: data.newLabel.content,
+          saleLabel: data.saleLabel.content,
+        });
+      }
+
+      if (response?.success) {
+        router.back();
+        enqueueSnackbar(currentProduct ? "Update success!" : "Create success!");
+      } else throw new Error("Failed to create product");
     } catch (error) {
       console.error(error);
-    }
+      enqueueSnackbar('Something went wrong')
+    } 
   });
 
   const handleDrop = useCallback(
@@ -170,13 +221,6 @@ export default function AddProductForm({
     setValue("images", []);
   }, [setValue]);
 
-  const handleChangeIncludeTaxes = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setIncludeTaxes(event.target.checked);
-    },
-    []
-  );
-
   const renderDetails = (
     <>
       {mdUp && (
@@ -206,7 +250,7 @@ export default function AddProductForm({
 
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Content</Typography>
-              <RHFEditor simple name="description" />
+              <RHFEditor simple name="content" />
             </Stack>
 
             <Stack spacing={1.5}>
@@ -219,7 +263,6 @@ export default function AddProductForm({
                 onDrop={handleDrop}
                 onRemove={handleRemoveFile}
                 onRemoveAll={handleRemoveAllFiles}
-                onUpload={() => console.info("ON UPLOAD")}
               />
             </Stack>
           </Stack>
@@ -267,74 +310,8 @@ export default function AddProductForm({
                 InputLabelProps={{ shrink: true }}
               />
 
-              <RHFSelect
-                native
-                name="category"
-                label="Category"
-                InputLabelProps={{ shrink: true }}
-              >
-                {PRODUCT_CATEGORY_GROUP_OPTIONS.map((category) => (
-                  <optgroup key={category.group} label={category.group}>
-                    {category.classify.map((classify) => (
-                      <option key={classify} value={classify}>
-                        {classify}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
-              </RHFSelect>
-
-              <RHFMultiSelect
-                checkbox
-                name="colors"
-                label="Colors"
-                options={PRODUCT_COLOR_NAME_OPTIONS}
-              />
-
-              <RHFMultiSelect
-                checkbox
-                name="sizes"
-                label="Sizes"
-                options={PRODUCT_SIZE_OPTIONS}
-              />
+              <TextField value={category} disabled />
             </Box>
-
-            <RHFAutocomplete
-              name="tags"
-              label="Tags"
-              placeholder="+ Tags"
-              multiple
-              freeSolo
-              options={_tags.map((option) => option)}
-              getOptionLabel={(option: any) => option}
-              renderOption={(props: any, option: any) => (
-                <li {...props} key={option}>
-                  {option}
-                </li>
-              )}
-              renderTags={(selected: any, getTagProps: any) =>
-                selected.map((option: any, index: any) => (
-                  <Chip
-                    {...getTagProps({ index })}
-                    key={option}
-                    label={option}
-                    size="small"
-                    color="info"
-                    variant="soft"
-                  />
-                ))
-              }
-            />
-
-            {/* <Stack spacing={1}>
-              <Typography variant="subtitle2">Gender</Typography>
-              <RHFMultiCheckbox
-                row
-                name="gender"
-                spacing={2}
-                options={PRODUCT_GENDER_OPTIONS}
-              />
-            </Stack> */}
 
             <Divider sx={{ borderStyle: "dashed" }} />
 
@@ -382,7 +359,7 @@ export default function AddProductForm({
 
           <Stack spacing={3} sx={{ p: 3 }}>
             <RHFTextField
-              name="price"
+              name="mrp"
               label="MRP"
               placeholder="0.00"
               type="number"
@@ -391,7 +368,7 @@ export default function AddProductForm({
                 startAdornment: (
                   <InputAdornment position="start">
                     <Box component="span" sx={{ color: "text.disabled" }}>
-                      $
+                      ₹
                     </Box>
                   </InputAdornment>
                 ),
@@ -399,7 +376,7 @@ export default function AddProductForm({
             />
 
             <RHFTextField
-              name="priceSale"
+              name="price"
               label="Price"
               placeholder="0.00"
               type="number"
@@ -408,41 +385,12 @@ export default function AddProductForm({
                 startAdornment: (
                   <InputAdornment position="start">
                     <Box component="span" sx={{ color: "text.disabled" }}>
-                      $
+                      ₹
                     </Box>
                   </InputAdornment>
                 ),
               }}
             />
-
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={includeTaxes}
-                  onChange={handleChangeIncludeTaxes}
-                />
-              }
-              label="Price includes taxes"
-            />
-
-            {!includeTaxes && (
-              <RHFTextField
-                name="taxes"
-                label="Tax (%)"
-                placeholder="0.00"
-                type="number"
-                InputLabelProps={{ shrink: true }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Box component="span" sx={{ color: "text.disabled" }}>
-                        %
-                      </Box>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
           </Stack>
         </Card>
       </Grid>
@@ -453,12 +401,6 @@ export default function AddProductForm({
     <>
       {mdUp && <Grid md={4} />}
       <Grid xs={12} md={8} sx={{ display: "flex", alignItems: "center" }}>
-        <FormControlLabel
-          control={<Switch defaultChecked />}
-          label="Publish"
-          sx={{ flexGrow: 1, pl: 3 }}
-        />
-
         <LoadingButton
           type="submit"
           variant="contained"
@@ -470,6 +412,10 @@ export default function AddProductForm({
       </Grid>
     </>
   );
+
+  useEffect(() => {
+    getParentCategory();
+  }, [getParentCategory]);
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>

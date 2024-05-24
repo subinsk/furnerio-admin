@@ -136,7 +136,7 @@ export default function CategoriesTable({
 
   const handleEditRow = useCallback(
     (id: string) => {
-      router.push("/edit/" + id);
+      router.push("/dashboard/edit-category/" + id);
     },
     [router]
   );

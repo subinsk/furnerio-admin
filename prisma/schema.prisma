@@ -54,19 +54,25 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  slug        String   @unique
-  name        String   @unique
-  sku         String   @unique
-  description String?
-  price       Float
-  image       String?
-  category    Category @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  orders      Order[]
-  cart        Cart[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  sku            String   @unique
+  code           String?
+  name           String
+  subDescription String?
+  content        String?
+  images         String[]
+  quantity       Int
+  category       Category @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  saleLabel      String?
+  newLabel       String?
+  price          Float
+  mrp            Float
+  orders         Order[]
+  cart           Cart[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@map("products")
 }
